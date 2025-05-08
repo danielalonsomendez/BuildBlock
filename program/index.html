@@ -1,26 +1,47 @@
-<!DOCTYPE html>
-<html lang="es">
+    <!DOCTYPE html>
+    <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuildBlock</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BuildBlock</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
 
-<body>
-    <header>
-        <h1>BuildBlock</h1>
-    </header>
-    <main id="juego">
-        <input type="button" value="Jugar" >
-       
-    </main>
-    <footer>
-        <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
-        <img src="" alt="CC">
-    </footer>
-    <script type="module" src="./main.js"></script>
+    <body>
+        <video id="fondo-video" autoplay muted loop>
+            <source src="src/video/inicio.webm" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+        <header>
+            <h1>BuildBlock</h1>
+        </header>
+        <main >
+            <input type="button" value="Jugar" onclick="inicioGame()">
+    <div id="juego" style="display: none;"></div>
+        </main>
+        <footer>
+            <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
+            <!-- <img src="" alt="CC"> -->
+        </footer>
+        <script type="module" src="./main.js"></script>
 
-</body>
+    </body>
 
-</html>
+    </html>
+    <script>
+        document.querySelector('input[type="button"]').addEventListener('click', () => {
+            const video = document.getElementById('fondo-video');
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const boton = document.querySelector('input[type="button"]');
+            
+            video.style.display = 'none';
+            header.style.display = 'none';
+            footer.style.display = 'none';
+            boton.style.display = 'none';
+        });
+
+        
+
+    </script>
