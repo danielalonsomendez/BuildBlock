@@ -1,65 +1,147 @@
 body,
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
 
-        video#fondo-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
+video#fondo-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
 
-        main,
-        header,
-        footer {
-            position: relative;
-            z-index: 1;
-            color: white;
-            text-align: center;
-        }
+main,
+header,
+footer {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+}
 
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        input[type="button"] {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 15px;
-            transition: background-color 0.3s ease;
-        }
-    
-        input[type="button"]:hover {
-            background-color: black;
-        }
-        
-        footer {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            margin: 10px;
-        }
+.hidden {
+    display: none;
+}
 
-        footer p {
-            margin: 0;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            font-size: 14px;
-        }
-        
+#juego{
+    z-index: -1;
+}
+
+#cruz_centro {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    /* Ancho total de la cruz */
+    height: 20px;
+    /* Alto total de la cruz */
+    z-index: 2;
+    /* Asegura que esté por encima de otros elementos */
+    pointer-events: none;
+    /* Evita que interfiera con los clics */
+}
+
+#cruz_centro::before,
+#cruz_centro::after {
+    content: '';
+    position: absolute;
+    background-color: white;
+    /* Color de la cruz */
+    border-radius: 5px;
+    /* Bordes redondeados */
+}
+
+#cruz_centro::before {
+    width: 2px;
+    /* Grosor de la línea vertical */
+    height: 100%;
+    /* Altura completa de la cruz */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#cruz_centro::after {
+    width: 100%;
+    /* Ancho completo de la cruz */
+    height: 2px;
+    /* Grosor de la línea horizontal */
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+#inventario {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0);
+    /* Totalmente transparente */
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+#inventario .slot {
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Transparencia para las casillas */
+    color: white;
+}
+
+
+
+input[type="button"] {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: background-color 0.3s ease;
+}
+
+input[type="button"]:hover {
+    background-color: black;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
+
+footer p {
+    margin: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+}

@@ -1,47 +1,65 @@
-    <!DOCTYPE html>
-    <html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BuildBlock</title>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildBlock</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-    <body>
-        <video id="fondo-video" autoplay muted loop>
-            <source src="src/video/inicio.webm" type="video/mp4">
-            Tu navegador no soporta videos HTML5.
-        </video>
-        <header>
-            <h1>BuildBlock</h1>
-        </header>
-        <main >
-            <input type="button" value="Jugar" onclick="inicioGame()">
-    <div id="juego" style="display: none;"></div>
-        </main>
-        <footer>
-            <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
-            <!-- <img src="" alt="CC"> -->
-        </footer>
-        <script type="module" src="./main.js"></script>
+<body>
+    <video id="fondo-video" autoplay muted loop>
+        <source src="src/video/inicio.webm" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+    </video>
+    <header>
+        <h1>BuildBlock</h1>
+    </header>
+    <main>
+        <input type="button" value="Jugar" onclick="inicioGame()">
+        <div id="juego" style="display: none;"></div>
+        <div id="cruz_centro" class="hidden"></div>
 
-    </body>
+        <!-- Contenedor del inventario -->
+        <div id="inventario" class="hidden">
+            <div class="slot" id="1">1</div>
+            <div class="slot" id="2">2</div>
+            <div class="slot" id="3">3</div>
+            <div class="slot" id="4">4</div>
+            <div class="slot" id="5">5</div>
+            <div class="slot" id="6">6</div>
+            <div class="slot" id="7">7</div>
+            <div class="slot" id="8">8</div>
+            <div class="slot" id="9">9</div>
+            <div class="slot" id="0">0</div>
+        </div>
+    </main>
+    <footer>
+        <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
+        <!-- <img src="" alt="CC"> -->
+    </footer>
+    <script type="module" src="./main.js"></script>
 
-    </html>
-    <script>
-        document.querySelector('input[type="button"]').addEventListener('click', () => {
-            const video = document.getElementById('fondo-video');
-            const header = document.querySelector('header');
-            const footer = document.querySelector('footer');
-            const boton = document.querySelector('input[type="button"]');
-            
-            video.style.display = 'none';
-            header.style.display = 'none';
-            footer.style.display = 'none';
-            boton.style.display = 'none';
-        });
 
-        
 
-    </script>
+</body>
+
+</html>
+<script>
+    document.querySelector('input[type="button"]').addEventListener('click', () => {
+        const video = document.getElementById('fondo-video');
+        const header = document.querySelector('header');
+        const footer = document.querySelector('footer');
+        const boton = document.querySelector('input[type="button"]');
+        const inventario = document.getElementById('inventario');
+        const cruz_centro = document.getElementById('cruz_centro');
+
+        video.style.display = 'none';
+        header.style.display = 'none';
+        footer.style.display = 'none';
+        boton.style.display = 'none';
+        inventario.style.display = 'flex';
+        cruz_centro.classList.remove('hidden');
+    });
+</script>
