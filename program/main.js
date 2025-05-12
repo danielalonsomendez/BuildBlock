@@ -1,25 +1,23 @@
-import * as THREE from './libs/build/three.module.js';
-import {
-    FirstPersonControls
-} from './libs/controls/FirstPersonControls.js';
-import * as MAP from "./js/map.js";
-import * as PLAYER from "./js/player.js";
 import Game from "./js/game.js";
 import * as ANIMATE from "./js/animate.js";
+import * as INTERACCION from "./js/interaccion.js";
+import * as THREE from './libs/build/three.module.js';
 
-var game= new Game();
-
-/*FUNCION PARA BOTON HTML*/ 
+var game = new Game();
+var juegoejecutado = false;
+/*FUNCION PARA BOTON HTML*/
 function inicioGame() {
     document.getElementById("juego").style.display = "block";
-    document.querySelector("main").requestFullscreen();
-    const canvas = game.renderer.domElement;
-    canvas.focus(); // Asegurar que el canvas reciba el foco
-    captureMouse(); // Bloquear el ratón
-    ANIMATE.animate(game);
+    captureMouse();
+    document.getElementById("juego").requestFullscreen();
+    console.log("Iniciando juego...");
+    if (!juegoejecutado) {
+        juegoejecutado = true;
+        ANIMATE.animate(game);
+    }
 }
 
-/*ESCENARIO Y EVENTOS*/ 
+/*ESCENARIO Y EVENTOS*/
 
 window.addEventListener('resize', () => {
     game.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -52,9 +50,39 @@ function captureMouse() {
 // Manejar eventos de cuando el ratón entra o sale del "Pointer Lock"
 // Llamar a la función para capturar el ratón cuando el jugador haga clic en el canvas
 document.body.addEventListener('click', () => {
-    if (!game.isPointerLocked) {
-        document.querySelector("main").requestFullscreen(); // Asegúrate de que el canvas esté en pantalla completa
+    if (!game.isPointerLocked && document.getElementById("juego").style.display != "none") {
         captureMouse();  // Bloqueamos el ratón si no está bloqueado
+        document.querySelector("main").requestFullscreen(); // Asegúrate de que el canvas esté en pantalla completa
     }
 });
 
+document.addEventListener('fullscreenchange', () => {
+    const ocultarElemento = document.getElementById('juego');
+    if (!document.fullscreenElement) {
+        document.getElementById("inicio").style.display = "none";
+        document.querySelector("header").style.display = "none";
+        //ocultarElemento.style.display = 'none';
+    }
+});
+
+
+let lastIntersected = null; // Para rastrear la última cara impactada
+
+// Detectar movimiento del ratón
+/*window.addEventListener('mousemove', (event) => {
+    lastIntersected = INTERACCION.handleMouseMove(event, game);
+});*/
+
+// Detectar clic del ratón para colocar un bloque
+// Add event listeners for mouse movement and clicks
+document.addEventListener('mousemove', (event) => {
+    if (game && game.isPointerLocked) {
+        INTERACCION.updatePreviewBlock(event, game);
+    }
+});
+
+document.addEventListener('click', (event) => {
+    if (game && game.isPointerLocked) {
+        INTERACCION.handleMouseClick(event, game);
+    }
+});

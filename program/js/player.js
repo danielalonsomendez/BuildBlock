@@ -2,7 +2,7 @@ import * as THREE from '../libs/build/three.module.js';
 import { PointerLockControls } from '../libs/controls/PointerLockControls.js';
 import { setVelocityY } from './animate.js';
 
-const jumpStrength = 300;
+const jumpStrength = 200;
 let lastKey = null;
 const PLAYER_HEIGHT = 170;
 
@@ -37,10 +37,6 @@ function init(game) {
     game.isJumping = false;
     game.isPointerLocked = false;
 
-    // Captura del ratón
-    document.body.addEventListener('click', () => {
-        if (!game.isPointerLocked) captureMouse(game.renderer.domElement);
-    });
 
     document.addEventListener('pointerlockchange', () => {
         game.isPointerLocked = document.pointerLockElement === game.renderer.domElement;
@@ -60,15 +56,17 @@ function init(game) {
         game.keys[key] = true;
 
         // Correr
-        if (key === 'shift') {
-            game.controls.movementSpeed = 300;
-        }
+        if (event.key === 'Shift') {
+    game.keys.shift = true;
+}
+
 
         // Saltar
         if (event.code === 'Space' && !game.isJumping) {
             setVelocityY(jumpStrength);
             game.isJumping = true;
         }
+        
 
         // Selección de número
         if (!isNaN(event.key) && event.key >= '0' && event.key <= '9') {
@@ -89,9 +87,10 @@ function init(game) {
         game.keys[key] = false;
 
         // Dejar de correr
-        if (key === 'shift') {
-            game.controls.movementSpeed = 150;
-        }
+        if (event.key === 'Shift') {
+    game.keys.shift = false;
+}
+
     });
 }
 

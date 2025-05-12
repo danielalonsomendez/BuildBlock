@@ -1,42 +1,63 @@
 import * as THREE from '../libs/build/three.module.js';
 import * as MAP from './map.js';
+import * as INTERACCION from './interaccion.js';
+
 
 const clock = new THREE.Clock();
-let velocityY = 0;
+let velocityY = 200;
 const PLAYER_HEIGHT = 150;
 const COLLISION_DISTANCE = 25;
+const GRAVITY = 350;
+const MAX_FALL_SPEED = 200;
+let baseMoveSpeed = 150;
 
+
+
+
+function isOnGround(position, terrain) {
+    const playerX = position.x;
+    const playerZ = position.z;
+
+    // Convertir posición del mundo a índices del terreno
+    const terrainX = Math.floor(playerX / MAP.cubeSize);
+    const terrainZ = Math.floor(playerZ / MAP.cubeSize);
+
+    // Verificar si hay un bloque en esta posición
+    const block = terrain.getBlockAt(terrainX, terrainZ);
+    return block !== null;
+}
 
 function checkCollision(position, terrain) {
     const playerX = position.x;
     const playerZ = position.z;
-    
+    const playerY = position.y;
+
     // Convertir posición del mundo a índices del terreno
-    const terrainX = Math.floor((playerX + (MAP.terrainSize * MAP.cubeSize) / 2) / MAP.cubeSize);
-    const terrainZ = Math.floor((playerZ + (MAP.terrainSize * MAP.cubeSize) / 2) / MAP.cubeSize);
-    
-    // Verificar si estamos dentro de los límites del terreno
-    if (terrainX >= 0 && terrainX < MAP.terrainSize && 
-        terrainZ >= 0 && terrainZ < MAP.terrainSize) {
-        
-        // Comprobar colisiones con los bloques adyacentes
-        for (let dx = -1; dx <= 1; dx++) {
-            for (let dz = -1; dz <= 1; dz++) {
-                const checkX = terrainX + dx;
-                const checkZ = terrainZ + dz;
-                
-                if (checkX >= 0 && checkX < MAP.terrainSize && 
-                    checkZ >= 0 && checkZ < MAP.terrainSize) {
-                    const block = terrain[checkX][checkZ];
-                    if (block) {
-                        const blockBB = new THREE.Box3().setFromObject(block);
-                        const playerPos = new THREE.Vector3(playerX, PLAYER_HEIGHT/2, playerZ);
-                        const distance = blockBB.distanceToPoint(playerPos);
-                        
-                        if (distance < COLLISION_DISTANCE) {
-                            return true;
-                        }
-                    }
+    const terrainX = Math.floor(playerX / MAP.cubeSize);
+    const terrainZ = Math.floor(playerZ / MAP.cubeSize);
+
+    // Comprobar colisiones con los bloques adyacentes
+    for (let dx = -1; dx <= 1; dx++) {
+        for (let dz = -1; dz <= 1; dz++) {
+            const checkX = terrainX + dx;
+            const checkZ = terrainZ + dz;
+
+            const block = terrain.getBlockAt(checkX, checkZ);
+            if (block) {
+                const blockBB = new THREE.Box3().setFromObject(block);
+
+                // Crear un punto para la posición del jugador usando la altura completa
+                const playerPos = new THREE.Vector3(playerX, playerY, playerZ);
+
+                // Verificar si el jugador está dentro del bloque
+                if (blockBB.containsPoint(playerPos)) {
+                    return true;
+                }
+
+                // También verificar la distancia para colisiones cercanas
+                const distance = blockBB.distanceToPoint(playerPos);
+                if (distance < COLLISION_DISTANCE) {
+                    return true;
                 }
             }
         }
@@ -48,9 +69,12 @@ function animate(game) {
     const deltaTime = clock.getDelta();
     requestAnimationFrame(() => animate(game));
 
+    // Actualizar chunks del terreno
+    game.terrain.updateTerrain(game);
+
     // Movimiento con colisiones
     if (game.isPointerLocked) {
-        const moveSpeed = 150;
+        const moveSpeed = game.keys.shift ? 300 : baseMoveSpeed;
         const direction = new THREE.Vector3();
 
         if (game.keys.w) direction.z -= 1;
@@ -59,7 +83,7 @@ function animate(game) {
         if (game.keys.d) direction.x += 1;
 
         direction.normalize();
-        
+
         // Aplicar la rotación de la cámara al vector de dirección
         const moveVector = direction.clone();
         moveVector.applyEuler(new THREE.Euler(0, game.camera.rotation.y, 0));
@@ -67,34 +91,96 @@ function animate(game) {
 
         // Calcular la nueva posición
         const newPosition = game.camera.position.clone();
-        
-        // Verificar movimiento en X y Z
         newPosition.x += moveVector.x;
         newPosition.z += moveVector.z;
-        
+
         // Si no hay colisión, aplicar el movimiento
         if (!checkCollision(newPosition, game.terrain)) {
             game.camera.position.x += moveVector.x;
             game.camera.position.z += moveVector.z;
         }
+    } // Gravedad y salto
+    // Aplicar gravedad si no estamos en el suelo
+    if (!isOnGround(game.camera.position, game.terrain) && velocityY === 0 && !game.isJumping) {
+        velocityY = -0.1; // Iniciar caída suave
     }
 
-    // Gravedad y salto
+
+    // Física de salto y caída
+    // Física de salto y caída
     if (game.isJumping) {
-        velocityY -= 9.8 * deltaTime;
-        const newY = game.camera.position.y + velocityY * deltaTime;
-        
-        if (newY <= PLAYER_HEIGHT) {
-            game.camera.position.y = PLAYER_HEIGHT;
-            game.isJumping = false;
+        // Aplicar gravedad durante el salto
+        velocityY -= GRAVITY * deltaTime;
+        velocityY = Math.max(velocityY, -MAX_FALL_SPEED); // Limita la velocidad de caída
+
+        // Calcular nueva posición
+        const newPosition = game.camera.position.clone();
+        newPosition.y += velocityY * deltaTime;
+
+        // Si chocamos con algo
+        if (checkCollision(newPosition, game.terrain)) {
+            const terrainX = Math.floor(game.camera.position.x / MAP.cubeSize);
+            const terrainZ = Math.floor(game.camera.position.z / MAP.cubeSize);
+            const block = game.terrain.getBlockAt(terrainX, terrainZ);
+
+            if (block) {
+                // Si hay un bloque, posicionar encima
+                game.camera.position.y = block.position.y + MAP.cubeSize / 2 + PLAYER_HEIGHT;
+            } else {
+                // Si no hay bloque, volver al suelo
+                game.camera.position.y = PLAYER_HEIGHT;
+            }
+            game.isJumping = false; // Finalizar el salto
             velocityY = 0;
         } else {
-            game.camera.position.y = newY;
+            // Si no hay colisión, actualizar posición Y
+            game.camera.position.y = newPosition.y;
+
+            // Si caemos por debajo del nivel del suelo, resetear
+            if (game.camera.position.y < PLAYER_HEIGHT) {
+                game.camera.position.y = PLAYER_HEIGHT;
+                game.isJumping = false; // Finalizar el salto
+                velocityY = 0;
+            }
+        }
+    } else if (!isOnGround(game.camera.position, game.terrain)) {
+        // Aplicar gravedad si no estamos en el suelo
+        velocityY -= GRAVITY * deltaTime;
+        velocityY = Math.max(velocityY, -MAX_FALL_SPEED); // Limita la velocidad de caída
+
+        const newPosition = game.camera.position.clone();
+        newPosition.y += velocityY * deltaTime;
+
+        if (checkCollision(newPosition, game.terrain)) {
+            const terrainX = Math.floor(game.camera.position.x / MAP.cubeSize);
+            const terrainZ = Math.floor(game.camera.position.z / MAP.cubeSize);
+            const block = game.terrain.getBlockAt(terrainX, terrainZ);
+
+            if (block) {
+                game.camera.position.y = block.position.y + MAP.cubeSize / 2 + PLAYER_HEIGHT;
+            } else {
+                game.camera.position.y = PLAYER_HEIGHT;
+            }
+            velocityY = 0;
+        } else {
+            game.camera.position.y = newPosition.y;
+
+            if (game.camera.position.y < PLAYER_HEIGHT) {
+                game.camera.position.y = PLAYER_HEIGHT;
+                velocityY = 0;
+            }
         }
     } else {
-        // Mantener altura fija cuando no está saltando
-        game.camera.position.y = PLAYER_HEIGHT;
+        // Resetear velocidad vertical si estamos en el suelo
+        velocityY = 0;
+        game.isJumping = false; // Asegurarse de que el estado de salto se reinicie
     }
+
+
+    // Llamar a la detección de intersecciones en cada frame
+//INTERACCION.handleMouseMove({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 }, game);
+    // Renderizar la escena
+    game.renderer.render(game.scene, game.camera);
 
     // Renderiza la escena
     render(game);
@@ -110,7 +196,6 @@ function onWindowResize(game) {
     game.renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Función para establecer la velocidad vertical
 function setVelocityY(value) {
     velocityY = value;
 }
