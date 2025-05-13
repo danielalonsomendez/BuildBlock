@@ -18,6 +18,7 @@ class Game {
             s: false,
             d: false
         };
+        this.lastKey = '1'; // Default inventory slot
         PLAYER.init(this);
         MAP.createTerrain(this);
     }

@@ -1,0 +1,66 @@
+{
+  "blocks": {
+    "0": {
+      "name": "obsidiana",
+      "textures": {
+        "all": "src/img/obsidiana/obsidiana.jpg"
+      }
+    },
+    "1": {
+      "name": "tierra",
+      "textures": {
+        "top": "src/img/tierra/top.png",
+        "side": "src/img/tierra/tierra.jpg",
+        "bottom": "src/img/tierra/tierra.jpg"
+      }
+    },
+    "2": {
+      "name": "tronco",
+      "textures": {
+        "all": "src/img/tronco/tronco.jpg"
+      }
+    },
+    "3": {
+      "name": "madera",
+      "textures": {
+        "all": "src/img/madera/madera.jpg"
+      }
+    },
+    "4": {
+      "name": "piedra",
+      "textures": {
+        "all": "src/img/piedra/piedra.jpg"
+      }
+    },
+    "5": {
+      "name": "roca",
+      "textures": {
+        "all": "src/img/roca/roca.jpg"
+      }
+    },
+    "6": {
+      "name": "b_hierro",
+      "textures": {
+        "all": "src/img/b_hierro/b_hierro.jpg"
+      }
+    },
+    "7": {
+      "name": "b_oro",
+      "textures": {
+        "all": "src/img/b_oro/b_oro.jpg"
+      }
+    },
+    "8": {
+      "name": "b_diamante",
+      "textures": {
+        "all": "src/img/b_diamante/b_diamante.jpg"
+      }
+    },
+    "9": {
+      "name": "ladrillo",
+      "textures": {
+        "all": "src/img/ladrillo/ladrillo.jpg"
+      }
+    }
+  }
+}

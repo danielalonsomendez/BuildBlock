@@ -2,9 +2,9 @@ import * as THREE from '../libs/build/three.module.js';
 import { PointerLockControls } from '../libs/controls/PointerLockControls.js';
 import { setVelocityY } from './animate.js';
 
-const jumpStrength = 200;
+const jumpStrength = 350; // Ajustado para un salto más natural
 let lastKey = null;
-const PLAYER_HEIGHT = 170;
+const PLAYER_HEIGHT = 250;
 
 function init(game) {
     // Escena
@@ -57,28 +57,65 @@ function init(game) {
 
         // Correr
         if (event.key === 'Shift') {
-    game.keys.shift = true;
-}
-
-
-        // Saltar
-        if (event.code === 'Space' && !game.isJumping) {
+            game.keys.shift = true;
+        }        // Saltar
+        if (event.code === 'Space') {
+            console.log('Saltar');
             setVelocityY(jumpStrength);
-            game.isJumping = true;
         }
-        
 
         // Selección de número
         if (!isNaN(event.key) && event.key >= '0' && event.key <= '9') {
+            game.lastKey = event.key; // Update the lastKey property of the game object
+
             if (lastKey !== null) {
                 const prevEl = document.getElementById(lastKey);
-                if (prevEl) prevEl.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+                if (prevEl) prevEl.classList.remove("seleccionado");
             }
 
             const currentEl = document.getElementById(event.key);
-            if (currentEl) currentEl.style.backgroundColor = "red";
+            if (currentEl) {
+                currentEl.classList.add("seleccionado");
+
+                // Inserta el ID seleccionado como clase en el div del inventario
+                const inventario = document.getElementById("inventario");
+                if (inventario) {
+                    inventario.className = `slot-${event.key}`;
+                }
+            }
 
             lastKey = event.key;
+        }
+
+        // Navegación con flechas
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            let newKey = null;
+
+            if (lastKey !== null) {
+                const prevEl = document.getElementById(lastKey);
+                if (prevEl) prevEl.classList.remove("seleccionado");
+
+                if (event.key === 'ArrowLeft') {
+                    newKey = (parseInt(lastKey) - 1 + 10) % 10; // Ir al anterior, con wrap-around
+                } else if (event.key === 'ArrowRight') {
+                    newKey = (parseInt(lastKey) + 1) % 10; // Ir al siguiente, con wrap-around
+                }
+            } else {
+                newKey = event.key === 'ArrowLeft' ? 9 : 0; // Si no hay selección previa, empezar desde el extremo
+            }
+
+            const currentEl = document.getElementById(newKey);
+            if (currentEl) {
+                currentEl.classList.add("seleccionado");
+
+                // Inserta el ID seleccionado como clase en el div del inventario
+                const inventario = document.getElementById("inventario");
+                if (inventario) {
+                    inventario.className = `slot-${newKey}`;
+                }
+            }
+
+            lastKey = newKey.toString();
         }
     });
 
@@ -88,9 +125,26 @@ function init(game) {
 
         // Dejar de correr
         if (event.key === 'Shift') {
-    game.keys.shift = false;
-}
+            game.keys.shift = false;
+        }
 
+    });
+
+    // Seleccionar el número 1 por defecto
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaultKey = '1';
+        const defaultEl = document.getElementById(defaultKey);
+        if (defaultEl) {
+            defaultEl.classList.add("seleccionado");
+
+            // Inserta el ID seleccionado como clase en el div del inventario
+            const inventario = document.getElementById("inventario");
+            if (inventario) {
+                inventario.className = `slot-${defaultKey}`;
+            }
+        }
+
+        lastKey = defaultKey;
     });
 }
 

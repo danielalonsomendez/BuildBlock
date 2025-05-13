@@ -2,7 +2,7 @@ import * as THREE from '../libs/build/three.module.js';
 
 const CHUNK_SIZE = 16; // Tamaño de cada chunk
 const RENDER_DISTANCE = 3; // Cantidad de chunks visibles en cada dirección
-const cubeSize = 50; // Tamaño de cada cubo
+const cubeSize = 75; // Tamaño de cada cubo
 
 // Geometría y material compartidos para todos los cubos
 const sharedGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
@@ -28,7 +28,8 @@ class Chunk {
                 
                 // Usar geometría y material compartidos
                 const cube = new THREE.Mesh(sharedGeometry, sharedMaterial);
-                
+                        cube.userData.isDetectable = true;
+
                 // Posición en el mundo
                 cube.position.set(
                     worldX * cubeSize,
@@ -118,6 +119,35 @@ class TerrainManager {
         
         return chunk.blocks[blockX]?.[blockZ] || null;
     }
+
+    isOnGround(playerPosition) {
+        const playerX = playerPosition.x;
+        const playerZ = playerPosition.z;
+        const playerY = playerPosition.y;
+
+        // Obtener todos los bloques detectables
+        const blocks = Array.from(this.chunks.values()).flatMap(chunk => chunk.blocks.flat());
+
+        for (const block of blocks) {
+            if (!block) continue;
+            const blockBB = new THREE.Box3().setFromObject(block);
+
+            // Verificar si el jugador está sobre el bloque
+            if (
+                playerX >= blockBB.min.x &&
+                playerX <= blockBB.max.x &&
+                playerZ >= blockBB.min.z &&
+                playerZ <= blockBB.max.z &&
+                playerY >= blockBB.max.y &&
+                playerY <= blockBB.max.y + 40 // Tolerancia para considerar que está "sobre"
+            ) {
+                return true;
+            }
+        }
+
+        // Siempre devolver true si no se encuentra un bloque
+        return true;
+    }
 }
 
 const terrainManager = new TerrainManager();
@@ -128,7 +158,7 @@ function addFogToScene(scene) {
     scene.background = new THREE.Color(fogColor); // Establecer el color de fondo de la escena
 
     const near = 900; // Distancia mínima para que la niebla comience
-    const far = 1200; // Distancia máxima donde la niebla es completamente opaca
+    const far = 3500; // Distancia máxima donde la niebla es completamente opaca
     scene.fog = new THREE.Fog(fogColor, near, far);
 }
 
@@ -146,5 +176,6 @@ function createTerrain(game) {
 export {
     createTerrain,
     CHUNK_SIZE,
-    cubeSize
+    cubeSize,
+    TerrainManager // Exportar para usar en otros módulos
 };
