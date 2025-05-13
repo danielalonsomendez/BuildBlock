@@ -5,22 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuildBlock</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <video id="fondo-video" autoplay muted loop>
+        <source src="src/video/inicio.webm" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+    </video>
     <header>
-        <h1>BuildBlock</h1>
+        <img src="src/img/logo.png" alt="BuildBlock" width="500">
+        <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
     </header>
-    <main id="juego">
-        <input type="button" value="Jugar" >
-       
+    <main id="juego" style="display: none;">
+        <div id="cruz_centro"></div>
+        <div id="inventario">
+            <div class="slot" id="1">1</div>
+            <div class="slot" id="2">2</div>
+            <div class="slot" id="3">3</div>
+            <div class="slot" id="4">4</div>
+            <div class="slot" id="5">5</div>
+            <div class="slot" id="6">6</div>
+            <div class="slot" id="7">7</div>
+            <div class="slot" id="8">8</div>
+            <div class="slot" id="9">9</div>
+            <div class="slot" id="0">0</div>
+        </div>
+        <img src="src/img/logo.png" alt="BuildBlock" width="500">
+
+    </main>
+    <main id="inicio">
+        <input type="button" value="Jugar">
+
     </main>
     <footer>
-        <p>Miguel González, Daniel Alonso, Julen Fernandez</p>
-        <img src="" alt="CC">
+        <!-- <img src="" alt="CC"> -->
     </footer>
     <script type="module" src="./main.js"></script>
+
+
 
 </body>
 
 </html>
+<script>
+</script>

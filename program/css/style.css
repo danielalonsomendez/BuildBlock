@@ -1,0 +1,189 @@
+@font-face {
+    font-family: 'Minecraft';
+    src: url('../src/otf/Minecraft.otf') format('truetype');
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+video#fondo-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+main,
+header,
+footer {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    z-index: -1;
+}
+
+#cruz_centro {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+    pointer-events: none;
+    background-color: transparent; /* Ensure the pointer is visible */
+}
+
+#cruz_centro::before,
+#cruz_centro::after {
+    content: '';
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+}
+
+#cruz_centro::before {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#cruz_centro::after {
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+#juego img {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 200px;
+    z-index: 1;
+}
+
+#inventario {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 4px solid black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+#inventario .slot {
+    width: 64px;
+    height: 64px;
+    border: 6px solid #A0A0A0;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 4px #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Minecraft', sans-serif;
+    font-size: 20px;
+    color: white;
+    background-size: cover; /* Asegura que la imagen de fondo cubra todo el slot */
+    background-position: center; /* Centra la imagen de fondo */
+}
+
+#inventario .slot[id="1"] {
+    background-image: url('../src/img/tierra/tierra.jpg');
+}
+
+#inventario .slot[id="2"] {
+    background-image: url('../src/img/tronco/tronco.jpg');
+}
+
+#inventario .slot[id="3"] {
+    background-image: url('../src/img/madera/madera.jpg');
+}
+
+#inventario .slot[id="4"] {
+    background-image: url('../src/img/piedra/piedra.jpg');
+}
+
+#inventario .slot[id="5"] {
+    background-image: url('../src/img/roca/roca.jpg');
+}
+
+#inventario .slot[id="6"] {
+    background-image: url('../src/img/b_hierro/b_hierro.jpg');
+}
+
+#inventario .slot[id="7"] {
+    background-image: url('../src/img/b_oro/b_oro.jpg');
+}
+
+#inventario .slot[id="8"] {
+    background-image: url('../src/img/b_diamante/b_diamante.jpg');
+}
+
+#inventario .slot[id="9"] {
+    background-image: url('../src/img/ladrillo/ladrillo.jpg');
+}
+
+#inventario .slot[id="0"] {
+    background-image: url('../src/img/obsidiana/obsidiana.jpg');
+}
+
+#inventario .seleccionado {
+    border: 6px solid white;
+}
+
+input[type="button"] {
+    background-color: #5e5e5e;
+    border: 2px solid black;
+    box-shadow:
+        inset -2px -2px #3a3a3a,
+        inset 2px 2px #7a7a7a,
+        0 0 0 2px black;
+    color: white;
+    font-size: 30px;
+    width: 300px;
+    padding: 20px 42px;
+    text-shadow: 1px 1px 0 #000;
+    cursor: pointer;
+    image-rendering: pixelated;
+    font-family: 'Minecraft', sans-serif;
+}
+
+input[type="button"]:hover {
+    background-color: #707070;
+}
+
+header p {
+    margin: 0;
+    font-family: 'Minecraft', sans-serif;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+}
