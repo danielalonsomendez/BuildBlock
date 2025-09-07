@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/danielalonsomendez/BuildBlock/refs/heads/main/program/src/img/logo-readme.png" alt="BuildBlock" width="400"/>
 
 # BuildBlock - basic Minecraft style web game
-Made by @danielalonsomendez @MiguelGonz06 @Julen-Elorrieta | Powered by [three.js](https://threejs.org) game engine
+Made by [@danielalonsomendez](https://github.com/danielalonsomendez), [@MiguelGonz06](https://github.com/MiguelGonz06), [@Julen-Elorrieta](https://github.com/Julen-Elorrieta) | Powered by [three.js](https://threejs.org) game engine
 
 You can **play now** at **[buildblock.web.app](https://buildblock.web.app/)**  
 
